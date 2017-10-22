@@ -1,5 +1,6 @@
-#include "mbed.h"
+#include "hardware.h"
 #include "GDEP015OC1.h"
+#include "Graphics.h"
 
 #define SPI_MOSI p11
 #define SPI_SCLK p13
@@ -19,12 +20,6 @@ DigitalIn busy(p10);
 DigitalOut busy_led(LED1);
 DigitalOut heartbeat_led(LED2);
 
-#define SPI_COMMAND(X) (X)
-#define SPI_DATA(X)    (0b10000000 | X)
-
-#define CMD_DEEP_SLEEP SPI_COMMAND(0x10)
-#define CMD_SW_RESET   SPI_COMMAND(0x12)
-
 int main() {
     // Configure 8-bit 4-line SPI and
     // Mode 3 - Polarity 1, phase 1,
@@ -34,18 +29,16 @@ int main() {
     // derived from clock cycle time (20->80%) of 250ns + 30ns fall/rise
     spi.frequency(3571E3);
     
-    lcd.writeString("Simon", 20, 20, GDEP015OC1::eBlack);
-    lcd.writeString("Rocks!", 20, 30, GDEP015OC1::eBlack);
+    Graphics::filled_rectangle(lcd, 0, 0, 199, 20, GDEP015OC1::eBlack);
+    Graphics::write_string(lcd, "Simon Rocks!", 6, 6, GDEP015OC1::eWhite);
     lcd.write();
-    while(busy);
-    lcd.fillRectangle(60, 20, 80, 180, GDEP015OC1::eBlack);
+    lcd.wait();
+
+    Graphics::filled_rectangle(lcd, 0, 0, 199, 199, GDEP015OC1::eWhite);
     lcd.write();
-    while(busy);
-    lcd.fillRectangle(0, 0, 199, 199, GDEP015OC1::eBlack);
+    lcd.wait();
     lcd.write();
-    while(busy);
-    lcd.fillRectangle(0, 0, 199, 199, GDEP015OC1::eWhite);
-    lcd.write();
+    lcd.wait();
     
     heartbeat_led = 1;
 }
