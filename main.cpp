@@ -9,6 +9,8 @@
 #define BUSY     p10
 #define DC       p8
 
+extern const Image picard;
+
 SPI spi(SPI_MOSI, NC, SPI_SCLK); // mosi, miso, sclk
 GDEP015OC1 lcd(spi, CS, DC, RESET, BUSY);
 
@@ -37,6 +39,8 @@ int main() {
     Graphics::filled_rectangle(lcd, 0, 0, 199, 199, GDEP015OC1::eWhite);
     lcd.write();
     lcd.wait();
+
+    Graphics::draw_image(lcd, picard, 0, 0);
     lcd.write();
     lcd.wait();
     

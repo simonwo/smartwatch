@@ -1,4 +1,5 @@
 #include "5x7.h"
+#include "image.h"
 
 static const int FONT_WIDTH = 5;
 static const int FONT_HEIGHT = 7;
@@ -161,5 +162,17 @@ namespace Graphics {
 
       for(uint8_t x=0; x<length; x++)
           write_char(display, *(string+x), startX+(FONT_WIDTH+1)*x, startY, color, italic, bold); //FONT_WIDTH+1 gives a 1px space between the characters
+  }
+
+  template <typename Display>
+  void draw_image(Display& display, const Image& image, uint16_t startX, uint16_t startY) {
+      for (auto x = 0; x < image.width; ++x) {
+          for (auto y = 0; y < image.height; ++y) {
+              const auto charnum = ((x * image.width) + y) / 8;
+              const auto bitnum  = ((x * image.width) + y) % 8;
+              const auto color   = (image.data[charnum] >> bitnum) & 0x1 ? Display::eWhite : Display::eBlack;
+              display.draw(startX + x, startY + y, color);
+          }
+      }
   }
 }
