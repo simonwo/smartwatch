@@ -1,6 +1,6 @@
 #include "hardware.h"
 #include "GDEP015OC1.h"
-#include "Graphics.h"
+#include "Platform.h"
 
 #define SPI_MOSI p11
 #define SPI_SCLK p13
@@ -9,18 +9,10 @@
 #define BUSY     p10
 #define DC       p8
 
-extern const Image picard;
-
 SPI spi(SPI_MOSI, NC, SPI_SCLK); // mosi, miso, sclk
 GDEP015OC1 lcd(spi, CS, DC, RESET, BUSY);
-
-//DigitalOut reset(p12);
-//DigitalOut chip_select(p14);
-//DigitalOut
-DigitalIn busy(p10);
-
-DigitalOut busy_led(LED1);
 DigitalOut heartbeat_led(LED2);
+smartwatch::Platform<GDEP015OC1> app(lcd);
 
 int main() {
     // Configure 8-bit 4-line SPI and
@@ -30,19 +22,13 @@ int main() {
     // Set SPI frequency to 3.571 MHz
     // derived from clock cycle time (20->80%) of 250ns + 30ns fall/rise
     spi.frequency(3571E3);
-    
-    Graphics::filled_rectangle(lcd, 0, 0, 199, 20, GDEP015OC1::eBlack);
-    Graphics::write_string(lcd, "Simon Rocks!", 6, 6, GDEP015OC1::eWhite);
-    lcd.write();
-    lcd.wait();
 
-    Graphics::filled_rectangle(lcd, 0, 0, 199, 199, GDEP015OC1::eWhite);
-    lcd.write();
-    lcd.wait();
+    app.init();
 
-    Graphics::draw_image(lcd, picard, 0, 0);
-    lcd.write();
-    lcd.wait();
-    
+    while (1) {
+      app.process();
+      sleep();
+    }
+
     heartbeat_led = 1;
 }
