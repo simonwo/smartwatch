@@ -21,6 +21,7 @@ namespace smartwatch {
     void SDLDisplay::wait() {
       // Simulate waiting for a write to complete.
       SDL_Delay(500 /*ms*/);
+      SDL_PumpEvents();
     }
 
     void SDLDisplay::write() {
