@@ -171,7 +171,7 @@ namespace Graphics {
               const auto charnum = ((x * image.width) + y) / 8;
               const auto bitnum  = ((x * image.width) + y) % 8;
               const auto color   = (image.data[charnum] >> bitnum) & 0x1 ? Display::eWhite : Display::eBlack;
-              display.draw(startX + x, startY + y, color);
+              display.draw(startX + (image.width - y - 1), startY + x, color); // I have no idea.
           }
       }
   }
