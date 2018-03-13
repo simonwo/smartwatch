@@ -3,25 +3,28 @@
  *  Modified by knutsel.org on 16/07/2017.
  *  Refactored by Simon Worthington on 22/09/2017.
  */
-
+#include <cstdint>
+#include "Display.h"
 #include "hardware.h"
+
+#ifndef GDEP0150C1_H
+#define GDEP0150C1_H
+
 #define BUSY_STATE         1
 
-class GDEP015OC1 {
+class GDEP015OC1 : public smartwatch::Display {
     public:
         GDEP015OC1(SPI& spi, PinName cs, PinName dc, PinName rst, PinName busy);
-
-        enum Color {eBlack,eWhite,eInvert};
 
         void fill(unsigned char data, int i);
         unsigned char get(uint16_t i);
         void empty();
         void invert();
-        void write();
+        void write() override;
         void writeFull();
-        void wait();
+        void wait() override;
 
-        void draw(uint16_t x, uint16_t y, Color color);
+        void draw(uint16_t x, uint16_t y, Display::Color color) override;
 
     private:
         SPI& _spi;
@@ -41,3 +44,5 @@ class GDEP015OC1 {
         unsigned char _pixelConv(unsigned char *data, int i);
         uint8_t _mirrorData(uint8_t data);
 };
+
+#endif

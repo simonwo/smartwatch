@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <memory>
 #include "SDL.h"
+#include "Display.h"
 #include "SDLDisplay.h"
 
 constexpr auto SCREEN_WIDTH = 200;
@@ -8,7 +9,7 @@ constexpr auto SCREEN_HEIGHT = SCREEN_WIDTH;
 
 namespace smartwatch {
   namespace simulator {
-    SDLDisplay::SDLDisplay(std::uint8_t scale) : scale_(scale) {
+    SDLDisplay::SDLDisplay(std::uint8_t scale) : scale_(scale), smartwatch::Display() {
       window_ = std::shared_ptr<SDL_Window>(SDL_CreateWindow("Smartwatch",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
@@ -29,7 +30,7 @@ namespace smartwatch {
     }
 
     void SDLDisplay::draw(std::uint16_t x, std::uint16_t y, Color color) {
-      const std::uint8_t rgb_value = (color == SDLDisplay::eWhite ? 255 : 0);
+      const std::uint8_t rgb_value = (color == Color::eWhite ? 255 : 0);
       SDL_SetRenderDrawColor(renderer_.get(), rgb_value, rgb_value, rgb_value, SDL_ALPHA_OPAQUE);
 
       const SDL_Rect pixel = { x * scale_, y * scale_, scale_, scale_ };

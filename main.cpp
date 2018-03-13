@@ -12,7 +12,7 @@
 SPI spi(SPI_MOSI, NC, SPI_SCLK); // mosi, miso, sclk
 GDEP015OC1 lcd(spi, CS, DC, RESET, BUSY);
 DigitalOut heartbeat_led(LED2);
-smartwatch::Platform<GDEP015OC1> app(lcd);
+smartwatch::Platform app(&lcd);
 
 int main() {
     // Configure 8-bit 4-line SPI and

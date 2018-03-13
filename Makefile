@@ -47,7 +47,7 @@ PROJECT := lcd_test
 # Objects and Paths
 
 OBJECTS += GDEP015OC1/GDEP015OC1.o
-OBJECTS += main.o picard.png.o
+OBJECTS += main.o Platform.o picard.png.o
 
  SYS_OBJECTS += mbed/TARGET_LPC1768/TOOLCHAIN_GCC_ARM/analogin_api.o
  SYS_OBJECTS += mbed/TARGET_LPC1768/TOOLCHAIN_GCC_ARM/analogout_api.o
@@ -150,6 +150,7 @@ C_FLAGS += mbed_config.h
 
 CXX_FLAGS += -std=gnu++11
 CXX_FLAGS += -fno-rtti
+CXX_FLAGS += -flto
 CXX_FLAGS += -Wvla
 CXX_FLAGS += -DDEVICE_ERROR_PATTERN=1
 CXX_FLAGS += -DDEVICE_SPI=1
@@ -205,7 +206,7 @@ ASM_FLAGS += -D__CORTEX_M3
 ASM_FLAGS += -DARM_MATH_CM3
 
 
-LD_FLAGS :=-Wl,--gc-sections -Wl,--wrap,main -Wl,--wrap,_memalign_r -Wl,--wrap,exit -Wl,--wrap,atexit -Wl,-n -mcpu=cortex-m3 -mthumb
+LD_FLAGS :=-Wl,--gc-sections -Wl,--wrap,main -Wl,--wrap,_memalign_r -Wl,--wrap,exit -Wl,--wrap,atexit -Wl,-n -mcpu=cortex-m3 -mthumb -flto
 LD_SYS_LIBS :=-Wl,--start-group -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys -Wl,--end-group
 
 # Tools and Flags

@@ -4,7 +4,7 @@
 int main(int, char**) {
     SDL_Init(SDL_INIT_VIDEO);
     smartwatch::simulator::SDLDisplay lcd(3);
-    smartwatch::Platform<smartwatch::simulator::SDLDisplay> app(lcd);
+    smartwatch::Platform app(&lcd);
 
     app.init();
     app.process();

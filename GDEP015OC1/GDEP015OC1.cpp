@@ -4,9 +4,12 @@
  */
 #include "hardware.h"
 #include "GDEP015OC1.h"
+#include "Display.h"
 
-static const unsigned char _lutFull[] = { 
-    0x02, 0x02, 0x01, 0x11, 0x12, 0x12, 0x22, 0x22, 0x66, 0x69, 0x69, 0x59, 0x58, 0x99, 0x99, 
+using smartwatch::Display;
+
+static const unsigned char _lutFull[] = {
+    0x02, 0x02, 0x01, 0x11, 0x12, 0x12, 0x22, 0x22, 0x66, 0x69, 0x69, 0x59, 0x58, 0x99, 0x99,
     0x88, 0x00, 0x00, 0x00, 0x00, 0xF8, 0xB4, 0x13, 0x51, 0x35, 0x51, 0x51, 0x19, 0x01, 0x00
 };
 
@@ -22,7 +25,7 @@ GDEP015OC1::GDEP015OC1(SPI& spi, PinName cs=p5, PinName dc=p6, PinName rst=p7, P
 void GDEP015OC1::_spiCommand(unsigned char command){
     _cs = _dc = 0;
     wait_us(1);
-    
+
     _spi.write(command);
 }
 
@@ -30,13 +33,13 @@ void GDEP015OC1::_spiData(unsigned char data){
     _cs = 0;
     _dc = 1;
     wait_us(1);
-    
+
     _spi.write(data);
 }
 
 void GDEP015OC1::_init(void){
     _reset = _cs = 1;
-    empty();    
+    empty();
 }
 
 void GDEP015OC1::wait() {
@@ -48,7 +51,7 @@ void GDEP015OC1::_wakeUp(bool partial){
     wait_ms(10);
     _reset = 1;
     wait_ms(10);
-    
+
     //Stage 3
     //Driver Output control
     _spiCommand(0x01);
@@ -139,7 +142,7 @@ void GDEP015OC1::_sleep(void){
     _spiData(0x01);
 }
 
-/*  
+/*
  *  If you touch this function satan will feast on your soul for an eternity!
  *  IM NOT PLAYING AROUND DONT FUCKING TOUCH IT!
  *  You are thinking about it...
@@ -153,7 +156,7 @@ unsigned char GDEP015OC1::_pixelConv(unsigned char *data, int i){
     for(uint8_t x = 0; x < 8; x++){
         pix |= ((*(data + (i*200)%5000 + (24-i/200) + x*25)>>((i/25)%8))&(0x01))<<(7-x);
     }
-    return pix^0xFF;    
+    return pix^0xFF;
 }
 
 uint8_t GDEP015OC1::_mirrorData(uint8_t data){
@@ -165,7 +168,7 @@ uint8_t GDEP015OC1::_mirrorData(uint8_t data){
 }
 
 void GDEP015OC1::fill(unsigned char data, int x){
-    _buffer[x] = data;   
+    _buffer[x] = data;
 }
 
 void GDEP015OC1::empty(void){
@@ -221,20 +224,20 @@ void GDEP015OC1::writeFull(void){
     _sleep();
 }
 
-void GDEP015OC1::draw(uint16_t x, uint16_t y, Color color=eBlack){
+void GDEP015OC1::draw(uint16_t x, uint16_t y, Color color=Color::eBlack){
     if(x>199 || y>199) return;
-    
+
     uint16_t i = x/8 + y*25;
 
     switch(color) {
-        case eWhite :
+        case Color::eWhite :
            _buffer[i] = (_buffer[i] & (0xFF^(1<<(7-x%8))));
            break;
-        case eBlack :
+        case Color::eBlack :
            _buffer[i] = (_buffer[i] | (1<<(7-x%8)));
-           break;   
-        case eInvert :
+           break;
+        case Color::eInvert :
             _buffer[i] = (_buffer[i] ^ (1<<(7-x%8)));
-           break;          
+           break;
     }
 }
