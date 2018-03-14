@@ -1,5 +1,7 @@
+#include <memory>
 #include "Graphics.h"
 #include "Display.h"
+#include "Application.h"
 #include "ptr.h"
 
 namespace smartwatch {
@@ -11,5 +13,6 @@ namespace smartwatch {
 
    private:
     ptr<Display> _lcd;
+    std::unique_ptr<Application> _current_app;
   };
 }

@@ -47,7 +47,11 @@ PROJECT := lcd_test
 # Objects and Paths
 
 OBJECTS += GDEP015OC1/GDEP015OC1.o
-OBJECTS += main.o Platform.o picard.png.o
+OBJECTS += main.o
+OBJECTS += Platform.o
+OBJECTS += Application.o
+OBJECTS += apps/Calculate.o
+OBJECTS += picard.png.o
 
  SYS_OBJECTS += mbed/TARGET_LPC1768/TOOLCHAIN_GCC_ARM/analogin_api.o
  SYS_OBJECTS += mbed/TARGET_LPC1768/TOOLCHAIN_GCC_ARM/analogout_api.o
